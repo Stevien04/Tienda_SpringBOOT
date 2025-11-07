@@ -9,6 +9,6 @@ public class controladorInicio {
     @GetMapping("/")
     public String redirigirInicio() {
         
-        return "redirect:/cargo";
+        return "redirect:/categoria";
     }
 }
