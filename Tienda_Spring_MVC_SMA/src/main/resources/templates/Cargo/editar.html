@@ -112,7 +112,10 @@
 
                 <div>
                     <label for="nombre">Nombre del cargo</label>
-                    <input id="nombre" type="text" th:field="*{nombre}" maxlength="20" required>
+                    <input id="nombre" type="text" th:field="*{nombre}" maxlength="20" required
+                           pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]+"
+                           title="Solo se permiten letras y espacios"
+                           oninput="this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]/g, '')">
                 </div>
 
                 <div class="estado">

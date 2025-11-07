@@ -10,8 +10,12 @@ import java.util.List;
 public interface repositorioCargo extends JpaRepository<modeloCargo, Integer> {
 
     List<modeloCargo> findByEstadoOrderByNombreAsc(Integer estado);
-
+    
+    List<modeloCargo> findByEstadoAndNombreContainingIgnoreCaseOrderByNombreAsc(Integer estado, String nombre);
+    
     boolean existsByNombreIgnoreCase(String nombre);
 
     boolean existsByNombreIgnoreCaseAndIdCargoNot(String nombre, Integer idCargo);
+    
+    
 }

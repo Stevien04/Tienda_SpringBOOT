@@ -7,10 +7,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 @Service
 public class servicioCargo {
-
+    
+    private static final Pattern NOMBRE_VALIDO = Pattern.compile("^[A-ZÁÉÍÓÚÜÑ\\s]+$");
+    
     private final repositorioCargo repositorioCargo;
 
     public servicioCargo(repositorioCargo repositorioCargo) {
@@ -25,6 +28,15 @@ public class servicioCargo {
     @Transactional(readOnly = true)
     public List<modeloCargo> listarInactivos() {
         return repositorioCargo.findByEstadoOrderByNombreAsc(0);
+    }
+    
+     @Transactional(readOnly = true)
+    public List<modeloCargo> buscarPorEstadoYNombre(Integer estado, String termino) {
+        String filtro = termino == null ? "" : termino.trim();
+        if (filtro.isEmpty()) {
+            return estado == 1 ? listarActivos() : listarInactivos();
+        }
+        return repositorioCargo.findByEstadoAndNombreContainingIgnoreCaseOrderByNombreAsc(estado, filtro);
     }
 
     @Transactional(readOnly = true)
@@ -70,5 +82,9 @@ public class servicioCargo {
 
     public String normalizarNombre(String nombre) {
         return nombre == null ? "" : nombre.trim().toUpperCase();
+    }
+    
+     public boolean esNombreValido(String nombreNormalizado) {
+        return NOMBRE_VALIDO.matcher(nombreNormalizado).matches();
     }
 }

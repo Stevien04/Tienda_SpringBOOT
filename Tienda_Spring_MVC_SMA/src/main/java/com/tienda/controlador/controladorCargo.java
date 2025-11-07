@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/cargo")
@@ -22,9 +23,11 @@ public class controladorCargo {
     }
 
     @GetMapping
-    public String listar(Model model) {
-        model.addAttribute("activos", servicioCargo.listarActivos());
-        model.addAttribute("inactivos", servicioCargo.listarInactivos());
+    public String listar(@RequestParam(value = "q", required = false) String terminoBusqueda, Model model) {
+        String filtro = terminoBusqueda == null ? "" : terminoBusqueda.trim();
+        model.addAttribute("busqueda", filtro);
+        model.addAttribute("activos", servicioCargo.buscarPorEstadoYNombre(1, filtro));
+        model.addAttribute("inactivos", servicioCargo.buscarPorEstadoYNombre(0, filtro));
         return "Cargo/lista";
     }
 
@@ -45,6 +48,12 @@ public class controladorCargo {
 
         if (nombreNormalizado.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "El nombre del cargo es obligatorio.");
+            redirectAttributes.addFlashAttribute("cargo", cargo);
+            return "redirect:/cargo/nuevo";
+        }
+        
+         if (!servicioCargo.esNombreValido(nombreNormalizado)) {
+            redirectAttributes.addFlashAttribute("error", "El nombre del cargo solo puede contener letras y espacios.");
             redirectAttributes.addFlashAttribute("cargo", cargo);
             return "redirect:/cargo/nuevo";
         }
@@ -88,6 +97,12 @@ public class controladorCargo {
 
         if (nombreNormalizado.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "El nombre del cargo es obligatorio.");
+            redirectAttributes.addFlashAttribute("cargo", formulario);
+            return "redirect:/cargo/{idCargo}/editar";
+        }
+        
+         if (!servicioCargo.esNombreValido(nombreNormalizado)) {
+            redirectAttributes.addFlashAttribute("error", "El nombre del cargo solo puede contener letras y espacios.");
             redirectAttributes.addFlashAttribute("cargo", formulario);
             return "redirect:/cargo/{idCargo}/editar";
         }
