@@ -1,15 +1,130 @@
 <!DOCTYPE html>
-<!--
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
--->
 <html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title>TODO supply a title</title>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body {
+                font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+                margin: 0;
+                background-color: #f8f9fa;
+                color: #212529;
+            }
+
+            main {
+                max-width: 540px;
+                margin: 0 auto;
+                padding: 3rem 1.5rem;
+            }
+
+            h1 {
+                color: #0b7285;
+                margin-bottom: 1.5rem;
+            }
+
+            form {
+                display: grid;
+                gap: 1.2rem;
+                background-color: #ffffff;
+                padding: 2rem;
+                border-radius: 0.75rem;
+                box-shadow: 0 0.75rem 2rem rgba(15, 23, 42, 0.12);
+            }
+
+            label {
+                font-weight: 600;
+            }
+
+            input[type="text"] {
+                padding: 0.75rem 1rem;
+                border-radius: 0.5rem;
+                border: 1px solid #ced4da;
+                font-size: 1rem;
+            }
+
+            input[type="text"]:focus {
+                outline: none;
+                border-color: #0b7285;
+                box-shadow: 0 0 0 0.2rem rgba(11, 114, 133, 0.25);
+            }
+
+            .estado {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.5rem 0.9rem;
+                border-radius: 999px;
+                font-size: 0.85rem;
+                background-color: #e7f5ff;
+                color: #0b7285;
+                font-weight: 600;
+                width: fit-content;
+            }
+
+            .acciones {
+                display: flex;
+                justify-content: flex-end;
+                gap: 0.75rem;
+            }
+
+            button {
+                padding: 0.6rem 1.4rem;
+                border: none;
+                border-radius: 0.5rem;
+                background-color: #0b7285;
+                color: #ffffff;
+                font-weight: 600;
+                cursor: pointer;
+            }
+
+            button:hover {
+                background-color: #0a5d6b;
+            }
+
+            a {
+                align-self: center;
+                color: #495057;
+                text-decoration: none;
+                font-weight: 500;
+            }
+
+            a:hover {
+                text-decoration: underline;
+            }
+
+            .alerta {
+                margin-bottom: 1rem;
+                padding: 0.75rem 1rem;
+                border-radius: 0.5rem;
+                background-color: #ffe3e3;
+                color: #c92a2a;
+            }
+        </style>
     </head>
     <body>
-        <div>TODO write content</div>
+        <main>
+            <h1>Editar cargo</h1>
+
+            <div th:if="${error}" class="alerta" th:text="${error}"></div>
+
+            <form th:action="@{'/cargo/' + ${cargo.idCargo} + '/editar'}" th:object="${cargo}" method="post">
+                <input type="hidden" th:field="*{idCargo}">
+
+                <div>
+                    <label for="nombre">Nombre del cargo</label>
+                    <input id="nombre" type="text" th:field="*{nombre}" maxlength="20" required>
+                </div>
+
+                <div class="estado">
+                    Estado actual:
+                    <span th:text="${cargo.activo} ? 'Activo' : 'Inactivo'"></span>
+                </div>
+
+                <div class="acciones">
+                    <a th:href="@{/cargo}">Cancelar</a>
+                    <button type="submit">Actualizar</button>
+                </div>
+            </form>
+        </main>
     </body>
 </html>

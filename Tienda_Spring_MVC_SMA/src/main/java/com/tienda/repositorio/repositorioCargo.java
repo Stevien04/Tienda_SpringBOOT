@@ -1,14 +1,17 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package com.tienda.repositorio;
 
-/**
- *
- * @author HP
- */
-public class repositorioCargo {
+import com.tienda.modelo.modeloCargo;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
+@Repository
+public interface repositorioCargo extends JpaRepository<modeloCargo, Integer> {
+
+    List<modeloCargo> findByEstadoOrderByNombreAsc(Integer estado);
+
+    boolean existsByNombreIgnoreCase(String nombre);
+
+    boolean existsByNombreIgnoreCaseAndIdCargoNot(String nombre, Integer idCargo);
 }
